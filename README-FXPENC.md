@@ -1,6 +1,6 @@
-# FXPENC for LPG-XP
+# LPG-XP
 
-FXPENC is a versioned encrypted package format for LPG-XP. This first implementation adds a standalone .NET 8 library and command-line packer without changing the existing editor or runtime.
+LPG-XP uses FXPENC, its versioned encrypted game package format. This first implementation adds a standalone .NET 8 library and command-line packer without changing the existing editor or runtime.
 
 ## Requirements
 
@@ -41,10 +41,10 @@ dotnet run --project src/Fxpenc.Cli -- extract ./Game.fxpenc ./Extracted ./game.
 Reference `src/Fxpenc.Core/Fxpenc.Core.csproj` from a .NET 8-compatible runtime:
 
 ```csharp
-byte[] key = GameArchiveKey.GetKey();
+byte[] key = LPGXP.Generated.GameArchiveKey.GetKey();
 try
 {
-    byte[] bytes = FxpencArchive.ReadFile("Game.fxpenc", "Graphics/Titles1.png", key);
+    byte[] bytes = LPGXP.Archive.FxpencArchive.ReadFile("Game.fxpenc", "Graphics/Titles1.png", key);
     // Decode the returned bytes directly using the runtime's asset API.
 }
 finally
