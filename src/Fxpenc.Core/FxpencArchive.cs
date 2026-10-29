@@ -148,7 +148,7 @@ public static class FxpencArchive
             throw new IOException("Asset exceeds the byte-array limit; use ExtractDirectory for large files.");
 
         using var output = new MemoryStream((int)selected.Length);
-        ReadPayload(stream, header, (entry, plain) =>
+        ReadPayload(stream, header, key, (entry, plain) =>
         {
             if (entry.Path == wanted) output.Write(plain);
         });
@@ -164,7 +164,7 @@ public static class FxpencArchive
         using var stream = File.OpenRead(archivePath);
         Header header = ReadHeader(stream, key);
 
-        ReadPayload(stream, header, (entry, plain) =>
+        ReadPayload(stream, header, key, (entry, plain) =>
         {
             string target = Path.GetFullPath(Path.Combine(root, entry.Path.Replace('/', Path.DirectorySeparatorChar)));
             if (!target.StartsWith(rootPrefix, PathComparison))
@@ -176,7 +176,7 @@ public static class FxpencArchive
         }, prepareTargets: true, outputRoot: root);
     }
 
-    private static void ReadPayload(Stream stream, Header header, Action<Entry, byte[]> consume,
+    private static void ReadPayload(Stream stream, Header header, byte[] key, Action<Entry, byte[]> consume,
         bool prepareTargets = false, string? outputRoot = null)
     {
         uint counter = 1;
@@ -205,7 +205,7 @@ public static class FxpencArchive
                     throw new InvalidDataException("FXPENC v1 nonce counter limit exceeded.");
                 try
                 {
-                    using var aes = new AesGcm(_activeKey!, TagLength);
+                    using var aes = new AesGcm(key, TagLength);
                     aes.Decrypt(MakeNonce(header.NoncePrefix, counter++), cipher, tag, plain,
                         ChunkAad(entry, chunkIndex, length));
                     consume(entry, plain);
@@ -224,9 +224,6 @@ public static class FxpencArchive
         if (stream.Position != stream.Length)
             throw new InvalidDataException("FXPENC archive contains trailing bytes.");
     }
-
-    // The key is scoped to a single synchronous public call. No static key storage is used.
-    [ThreadStatic] private static byte[]? _activeKey;
 
     private static Header ReadHeader(Stream stream, byte[] key)
     {
@@ -282,7 +279,6 @@ public static class FxpencArchive
                 payloadLength = checked(payloadLength + entry.Length + (long)entry.Chunks * TagLength);
             if (stream.Length - stream.Position != payloadLength)
                 throw new InvalidDataException("Payload size does not match the FXPENC manifest.");
-            _activeKey = key;
             return new Header(manifest, prefix);
         }
         finally
