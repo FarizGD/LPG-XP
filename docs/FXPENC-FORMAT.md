@@ -1,4 +1,4 @@
-# FXPENC v1 binary format
+# LPG-XP FXPENC v1 binary format
 
 All integers are little-endian except the 32-bit nonce counter embedded in the GCM nonce, which is big-endian.
 
@@ -31,7 +31,7 @@ Archive paths use `/` separators. Absolute paths, drive prefixes, backslashes, e
 
 ## Versioning
 
-Do not change the binary layout, nonce rules, or AAD semantics without incrementing the format version. FXPENC v1 is an LPG-XP format and is not compatible with `.rgssad`.
+Do not change the binary layout, nonce rules, or AAD semantics without incrementing the format version. FXPENC v1 is the LPG-XP archive format and is not compatible with `.rgssad`.
 
 ## Security limitation
 
