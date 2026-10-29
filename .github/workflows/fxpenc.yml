@@ -4,13 +4,13 @@ on:
   push:
     branches: [master, "feature/fxpenc-v1"]
     paths:
-      - "src/Fxpenc.*/**"
+      - "src/LPG-XP.*/**"
       - "docs/FXPENC-FORMAT.md"
       - "README-FXPENC.md"
       - ".github/workflows/fxpenc.yml"
   pull_request:
     paths:
-      - "src/Fxpenc.*/**"
+      - "src/LPG-XP.*/**"
       - "docs/FXPENC-FORMAT.md"
       - "README-FXPENC.md"
       - ".github/workflows/fxpenc.yml"
@@ -29,7 +29,7 @@ jobs:
         with:
           dotnet-version: 8.0.x
       - name: Build LPG-XP CLI
-        run: dotnet build src/Fxpenc.Cli/Fxpenc.Cli.csproj --configuration Release
+        run: dotnet build src/LPG-XP.CLI/Fxpenc.Cli.csproj --configuration Release
 
   smoke-test:
     runs-on: ubuntu-latest
@@ -39,12 +39,12 @@ jobs:
         with:
           dotnet-version: 8.0.x
       - name: Build
-        run: dotnet build src/Fxpenc.Cli/Fxpenc.Cli.csproj --configuration Release
+        run: dotnet build src/LPG-XP.CLI/Fxpenc.Cli.csproj --configuration Release
       - name: Round-trip and wrong-key checks
         shell: bash
         run: |
           set -euo pipefail
-          CLI="src/Fxpenc.Cli/bin/Release/net8.0/LPG-XP.dll"
+          CLI="src/LPG-XP.CLI/bin/Release/net8.0/LPG-XP.dll"
           mkdir -p test-input/nested
           : > test-input/empty.dat
           printf 'FXPENC smoke test\n' > test-input/readme.txt
