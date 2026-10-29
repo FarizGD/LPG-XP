@@ -304,3 +304,12 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+# FXPENC private game keys and local smoke-test output
+game.key
+wrong.key
+*.fxpenc-key
+GameArchiveKey.cs
+Game.fxpenc
+extracted/
+test-input/
+listing.txt
