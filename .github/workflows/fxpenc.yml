@@ -1,0 +1,66 @@
+name: FXPENC
+
+on:
+  push:
+    branches: [master, "feature/fxpenc-v1"]
+    paths:
+      - "src/Fxpenc.*/**"
+      - "docs/FXPENC-FORMAT.md"
+      - "README-FXPENC.md"
+      - ".github/workflows/fxpenc.yml"
+  pull_request:
+    paths:
+      - "src/Fxpenc.*/**"
+      - "docs/FXPENC-FORMAT.md"
+      - "README-FXPENC.md"
+      - ".github/workflows/fxpenc.yml"
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Build FXPENC CLI
+        run: dotnet build src/Fxpenc.Cli/Fxpenc.Cli.csproj --configuration Release
+
+  smoke-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Build
+        run: dotnet build src/Fxpenc.Cli/Fxpenc.Cli.csproj --configuration Release
+      - name: Round-trip and wrong-key checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          CLI="src/Fxpenc.Cli/bin/Release/net8.0/Fxpenc.Cli.dll"
+          mkdir -p test-input/nested
+          : > test-input/empty.dat
+          printf 'FXPENC smoke test\n' > test-input/readme.txt
+          python3 - <<'PY'
+          from pathlib import Path
+          Path("test-input/nested/large.bin").write_bytes(bytes(range(256)) * 8193)
+          Path("test-input/nested/utf8-雪.txt").write_text("cross-platform ✓\n", encoding="utf-8")
+          PY
+          dotnet "$CLI" keygen game.key
+          dotnet "$CLI" keygen wrong.key
+          dotnet "$CLI" pack test-input Game.fxpenc game.key
+          dotnet "$CLI" list Game.fxpenc game.key > listing.txt
+          grep -q 'nested/large.bin' listing.txt
+          dotnet "$CLI" extract Game.fxpenc extracted game.key
+          diff -r test-input extracted
+          if dotnet "$CLI" list Game.fxpenc wrong.key; then
+            echo "ERROR: wrong key unexpectedly succeeded" >&2
+            exit 1
+          fi
