@@ -29,7 +29,7 @@ jobs:
         with:
           dotnet-version: 8.0.x
       - name: Build LPG-XP CLI
-        run: dotnet build src/LPG-XP.CLI/Fxpenc.Cli.csproj --configuration Release
+        run: dotnet build src/LPG-XP.CLI/LPG-XP.CLI.csproj --configuration Release
 
   smoke-test:
     runs-on: ubuntu-latest
@@ -39,7 +39,7 @@ jobs:
         with:
           dotnet-version: 8.0.x
       - name: Build
-        run: dotnet build src/LPG-XP.CLI/Fxpenc.Cli.csproj --configuration Release
+        run: dotnet build src/LPG-XP.CLI/LPG-XP.CLI.csproj --configuration Release
       - name: Round-trip and wrong-key checks
         shell: bash
         run: |
