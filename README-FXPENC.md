@@ -10,13 +10,13 @@ LPG-XP uses FXPENC, its versioned encrypted game package format. This first impl
 ## Build
 
 ```sh
-dotnet build src/Fxpenc.Cli/Fxpenc.Cli.csproj -c Release
+dotnet build src/LPG-XP.CLI/Fxpenc.Cli.csproj -c Release
 ```
 
 ## Create a game key
 
 ```sh
-dotnet run --project src/Fxpenc.Cli -- keygen game.key --csharp GameArchiveKey.cs
+dotnet run --project src/LPG-XP.CLI -- keygen game.key --csharp GameArchiveKey.cs
 ```
 
 The key is a random 32-byte AES-256 key. Keep `game.key` and `GameArchiveKey.cs` private and out of public source control. Generate a different key for each game release.
@@ -26,19 +26,19 @@ The key is a random 32-byte AES-256 key. Keep `game.key` and `GameArchiveKey.cs`
 Package a deployment-ready copy of the game, not your working project directory:
 
 ```sh
-dotnet run --project src/Fxpenc.Cli -- pack ./GameBuild ./Game.fxpenc ./game.key
+dotnet run --project src/LPG-XP.CLI -- pack ./GameBuild ./Game.fxpenc ./game.key
 ```
 
 Inspect and extract for debugging:
 
 ```sh
-dotnet run --project src/Fxpenc.Cli -- list ./Game.fxpenc ./game.key
-dotnet run --project src/Fxpenc.Cli -- extract ./Game.fxpenc ./Extracted ./game.key
+dotnet run --project src/LPG-XP.CLI -- list ./Game.fxpenc ./game.key
+dotnet run --project src/LPG-XP.CLI -- extract ./Game.fxpenc ./Extracted ./game.key
 ```
 
 ## Runtime API
 
-Reference `src/Fxpenc.Core/Fxpenc.Core.csproj` from a .NET 8-compatible runtime:
+Reference `src/LPG-XP.Core/Fxpenc.Core.csproj` from a .NET 8-compatible runtime:
 
 ```csharp
 byte[] key = LPGXP.Generated.GameArchiveKey.GetKey();
