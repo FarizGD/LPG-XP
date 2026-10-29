@@ -32,7 +32,7 @@ static void WriteEmbeddedKey(string path, byte[] key)
 
     internal static class GameArchiveKey
     {
-        internal static byte[] GetKey() => Convert.FromHexString("{{hex}}");
+        internal static byte[] GetKey() => System.Convert.FromHexString("{{hex}}");
     }
     """;
     string? parent = Path.GetDirectoryName(Path.GetFullPath(path));
