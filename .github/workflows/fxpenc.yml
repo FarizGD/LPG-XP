@@ -31,6 +31,22 @@ jobs:
       - name: Build LPG-XP CLI
         run: dotnet build src/LPG-XP.CLI/LPG-XP.CLI.csproj --configuration Release
 
+  android-library-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Install .NET for Android workload
+        run: dotnet workload install android
+      - name: Build archive library for Android
+        run: dotnet build src/LPG-XP.Core/LPG-XP.Core.csproj --configuration Release --framework net8.0-android
+
   smoke-test:
     runs-on: ubuntu-latest
     steps:
