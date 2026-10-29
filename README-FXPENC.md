@@ -5,12 +5,13 @@ LPG-XP uses FXPENC, its versioned encrypted game package format. This first impl
 ## Requirements
 
 - .NET 8 SDK
-- Windows or Linux; Android use requires a compatible .NET runtime or a future native/runtime integration.
+- Windows or Linux for the packer CLI.
+- .NET for Android workload for Android builds. The archive library targets both `net8.0` and `net8.0-android`.
 
 ## Build
 
 ```sh
-dotnet build src/LPG-XP.CLI/Fxpenc.Cli.csproj -c Release
+dotnet build src/LPG-XP.CLI/LPG-XP.CLI.csproj -c Release
 ```
 
 ## Create a game key
@@ -38,7 +39,7 @@ dotnet run --project src/LPG-XP.CLI -- extract ./Game.fxpenc ./Extracted ./game.
 
 ## Runtime API
 
-Reference `src/LPG-XP.Core/Fxpenc.Core.csproj` from a .NET 8-compatible runtime:
+Reference `src/LPG-XP.Core/LPG-XP.Core.csproj` from a .NET 8 or .NET for Android runtime:
 
 ```csharp
 byte[] key = LPGXP.Generated.GameArchiveKey.GetKey();
