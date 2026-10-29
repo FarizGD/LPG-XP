@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 
-namespace Fxpenc.Core;
+namespace LPGXP.Archive;
 
 /// <summary>
 /// FXPENC v1 encrypted package reader/writer.
