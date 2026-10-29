@@ -1,4 +1,4 @@
-name: FXPENC
+name: LPG-XP FXPENC
 
 on:
   push:
@@ -28,7 +28,7 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
-      - name: Build FXPENC CLI
+      - name: Build LPG-XP CLI
         run: dotnet build src/Fxpenc.Cli/Fxpenc.Cli.csproj --configuration Release
 
   smoke-test:
