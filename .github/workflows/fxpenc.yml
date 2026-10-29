@@ -44,7 +44,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          CLI="src/Fxpenc.Cli/bin/Release/net8.0/Fxpenc.Cli.dll"
+          CLI="src/Fxpenc.Cli/bin/Release/net8.0/LPG-XP.dll"
           mkdir -p test-input/nested
           : > test-input/empty.dat
           printf 'FXPENC smoke test\n' > test-input/readme.txt
